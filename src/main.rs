@@ -28,7 +28,7 @@ enum SubCommand {
 
 fn is_hex_vec(vec: &Vec<String>) -> bool {
     for x in vec.iter() {
-        if let Ok(_) = u8::from_str_radix(x, 16) {
+        if u8::from_str_radix(x, 16).is_ok() {
             continue;
         } else {
             return false;
@@ -63,7 +63,7 @@ fn text_trim(text: &str) -> Vec<String> {
     // 各要素が16進数に変換する
     let mut hex_vec = vec![];
     for x in vec.into_iter() {
-        if let Ok(_) = u8::from_str_radix(x, 16) {
+        if u8::from_str_radix(x, 16).is_ok() {
             hex_vec.push(x.to_string());
         }
     }
@@ -91,8 +91,8 @@ fn convert_to_dec_string(hex_vec: &Vec<u8>) -> String {
 #[test]
 fn test_text_trim() {
     assert!(text_trim("00").len() == 1);
-    assert!(text_trim("rr").len() == 0);
-    assert!(text_trim("hrtyhs").len() == 0);
+    assert!(text_trim("rr").is_empty());
+    assert!(text_trim("hrtyhs").is_empty());
     assert!(text_trim("ac").len() == 1);
 }
 
@@ -100,9 +100,9 @@ fn text_read_file(path: &path::Path) -> String {
     // テキストファイルの内容を一括で読み込む
     let text = std::fs::read(path).expect("入力ファイルを読み込めません");
     let (text, _, _) = SHIFT_JIS.decode(&text);
-    let text = text.into_owned();
+    
 
-    text
+    text.into_owned()
 }
 
 fn check_remove_addressline() -> bool {
