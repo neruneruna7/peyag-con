@@ -31,7 +31,7 @@ env:
 jobs:
   build:
 
-    runs-on:  [windows-latest, ubuntu-20.04, macos-latest]
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v3
