@@ -14,7 +14,7 @@ mod api;
 struct Args {
     /// サブコマンドとして f と d があります.
     #[clap(subcommand)]
-    subcommand: SubCommand,
+    subcommand: Option<SubCommand>,
 }
 
 #[derive(Debug, Subcommand)]
@@ -37,13 +37,19 @@ enum SubCommand {
 
 fn main() {
     let args = Args::parse();
+
     match args.subcommand {
-        SubCommand::FileCon {
-            mut input_file,
-            mut output_file,
-        } => api::convert_string_hex_to_dec(&mut input_file, &mut output_file),
-        SubCommand::DecCon { hex_vec } => {
-            api::convert_file_hex_into_dec(&hex_vec);
+        None => {
+            api::convert_cli();
         }
+        Some(subcommand) => match subcommand {
+            SubCommand::FileCon {
+                mut input_file,
+                mut output_file,
+            } => api::convert_string_hex_to_dec(&mut input_file, &mut output_file),
+            SubCommand::DecCon { hex_vec } => {
+                api::convert_file_hex_into_dec(&hex_vec);
+            }
+        },
     }
 }

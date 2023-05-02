@@ -115,3 +115,47 @@ pub fn convert_string_hex_to_dec(input_file: &mut PathBuf, output_file: &mut Pat
     convert(input_file, output_file, is_remove_addressline);
     println!("file convert complete!");
 }
+
+pub fn convert_cli() {
+    println!("ファイルから16進数部分を抽出し，10進数に変換します.");
+    println!("拡張子を入力する必要はありません. 自動でtxtを付与します");
+    println!("または，16進数文字列を10進数に変換します");
+    println!();
+    println!("ファイル変換の入力例");
+    println!("-f input_path output_path ");
+    println!();
+    println!("-s 16進数文字列変換の入力例");
+    println!("00 01 02 aa ff");
+
+    let mut input = String::new();
+
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("cannot read from stdin");
+
+    let input_vec: Vec<PathBuf> = input.split_whitespace().map(|s| PathBuf::from(s)).collect();
+
+    // PathBuf型をstr型に変換
+    let input_str: &str = input_vec[0].to_str().expect("不正なモード指定です");
+
+    let input_vec = input_vec[1..input_vec.len()].to_owned();
+
+    match input_str {
+        "f" => {
+            let mut input_file = input_vec[0].clone();
+            let mut output_file = input_vec[1].clone();
+            convert_string_hex_to_dec(&mut input_file, &mut output_file);
+        }
+        "d" => {
+            let input_vec = input_vec
+                .iter()
+                .map(|x| x.to_string_lossy().to_string())
+                .collect();
+            convert_file_hex_into_dec(&input_vec);
+        }
+        _ => {
+            eprintln!("引数がありません");
+            std::process::exit(1);
+        }
+    }
+}
