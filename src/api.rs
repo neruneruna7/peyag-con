@@ -44,14 +44,23 @@ pub fn text_read_file(path: &path::Path) -> String {
 }
 
 // 16進数文字列を16進数に変換する関数
-pub fn convert_to_hex(vec: &Vec<String>) -> Vec<u8> {
-    vec.iter()
-        .map(|x| u8::from_str_radix(x, 16).expect("cannot convert to hex"))
-        .collect::<Vec<u8>>()
+pub fn convert_to_hex(vec: &Vec<String>) -> Vec<i16> {
+    // 要素2つずつに分割する
+    let converted_vec = vec
+        .chunks(2)
+        .map(|x| format!("{}{}", x[1], x[0]))
+        .map(|x| u16::from_str_radix(&x, 16).expect("cannot convert to hex") as i16)
+        .collect::<Vec<_>>();
+
+    // vec.iter()
+    //     .map(|x| u8::from_str_radix(x, 16).expect("cannot convert to hex"))
+    //     .collect::<Vec<u8>>()
+
+    converted_vec
 }
 
 // 16進数文字列を10進数に変換する関数
-pub fn convert_to_dec_string(hex_vec: &Vec<u8>) -> String {
+pub fn convert_to_dec_string(hex_vec: &Vec<i16>) -> String {
     let hex_vec = hex_vec
         .iter()
         .map(|x| format!("{}", x))
@@ -122,9 +131,9 @@ pub fn convert_cli() {
     println!("または，16進数文字列を10進数に変換します");
     println!();
     println!("ファイル変換の入力例");
-    println!("-f input_path output_path ");
+    println!("f input_path output_path ");
     println!();
-    println!("-s 16進数文字列変換の入力例");
+    println!("d 16進数文字列変換の入力例");
     println!("00 01 02 aa ff");
 
     let mut input = String::new();
