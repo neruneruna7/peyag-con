@@ -49,6 +49,8 @@ jobs:
             artifact_name: example-macos
             asset_name: example-x86_64-apple-darwin
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
     steps:
       # リポジトリの内容にアクセスできるようにする
       - uses: actions/checkout@v2
