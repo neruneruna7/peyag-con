@@ -79,7 +79,7 @@ jobs:
           # releaseBody: "See the assets to download this version and install."
           generate_release_notes: false
           files: |
-            target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+            target/${{ matrix.target }}/release/*
           
           # releaseDraft: true
           # prerelease: false
