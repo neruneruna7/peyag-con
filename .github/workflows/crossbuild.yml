@@ -1,0 +1,71 @@
+# Rust環境でのクロスビルドを行うGithub Actionsの設定ファイル
+
+name: crossbuild
+# 手動で実行するための設定
+on:
+  push:
+    branches:
+      - release
+
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: "Log level"
+        required: true
+        default: "warning"
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
+      tags:
+        description: "Test scenario tags"
+        required: false
+        type: boolean
+      environment:
+        description: "Environment to run tests against"
+        type: environment
+        required: false
+
+# クロスビルド用の設定
+# ubuntu windows macosの3つの環境でビルドを行う
+
+jobs:
+  build:
+    name: release
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_name: example-linux
+            asset_name: example-x86_64-unknown-linux-gnu
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: example-windows
+            asset_name: example-x86_64-pc-windows-msvc.exe
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact_name: example-macos
+            asset_name: example-x86_64-apple-darwin
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: install Rust stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: install cargo-release
+        run: cargo install cargo-release
+      - name: build
+        run: cargo build --release --target ${{ matrix.target }}
+      - name: release
+        run: cargo release --skip-publish --skip-push --skip-tag --artifact-name ${{ matrix.artifact_name }}
+      - name: upload
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          asset_content_type: application/octet-stream
