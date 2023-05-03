@@ -74,9 +74,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Releases  
+          name: Releases "App v__VERSION__" 
           #${{ matrix.artifact_name }}
-          tag_name:  Release 
+          tag_name:  app-v__VERSION__ 
           #${{ matrix.artifact_name }}
           # tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           # releaseName: "App v__VERSION__"
@@ -84,13 +84,4 @@ jobs:
           generate_release_notes: false
           files: |
             target/${{ matrix.target }}/release/*
-          
-          # releaseDraft: true
-          # prerelease: false
-      # - name: upload
-      #   uses: actions/upload-release-asset@v1
-      #   with:
-      #     # upload_url: ${{ steps.release.outputs.upload_url }}
-      #     asset_path: target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
-      #     asset_name: ${{ matrix.asset_name }}
-      #     asset_content_type: application/octet-stream
+         
