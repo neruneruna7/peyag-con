@@ -59,9 +59,7 @@ jobs:
       - name: install cargo-release
         run: cargo install cargo-release
       - name: build
-        run: cargo build --release --target ${{ matrix.target }}
-      - name: release
-        run: cargo release --skip-publish --skip-push --skip-tag --artifact-name ${{ matrix.artifact_name }}
+        run: cargo build --release --target ${{ matrix.target }} --all-features --verbose
       - name: upload
         uses: actions/upload-release-asset@v1
         with:
