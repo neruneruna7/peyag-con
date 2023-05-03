@@ -50,16 +50,24 @@ jobs:
             asset_name: example-x86_64-apple-darwin
     runs-on: ${{ matrix.os }}
     steps:
+      # リポジトリの内容にアクセスできるようにする
       - uses: actions/checkout@v2
+      # Rustの環境を構築する
       - name: install Rust stable
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
+      # cargo-releaseをインストールする
       - name: install cargo-release
         run: cargo install cargo-release
+      # ビルドを行う
       - name: build
         run: cargo build --release --target ${{ matrix.target }} --all-features --verbose
+      
+      - name: Create Release Draft
+        id: create_release
+        uses: softprops/action-gh-release@v1
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
