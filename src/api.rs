@@ -10,8 +10,8 @@ pub fn convert(input: &PathBuf, output: &PathBuf, is_remove_addressline: bool) {
     let mut output = std::fs::File::create(output).expect("出力ファイルを作成できません");
 
     // 破棄された処理 let is_remove_addressline = check_remove_addressline();
-
     // テキストファイルの内容を一括で読み込む
+
     let text = text_read_file(input);
 
     // 16進数ではない部分を除去し，ベクタに格納する
